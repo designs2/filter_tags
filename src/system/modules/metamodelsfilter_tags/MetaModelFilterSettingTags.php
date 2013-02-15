@@ -26,7 +26,7 @@ if (!defined('TL_ROOT'))
  * @subpackage FrontendFilter
  * @author     Christian de la Haye <service@delahaye.de>
  */
-class MetaModelFilterSettingTags extends MetaModelFilterSetting
+class MetaModelFilterSettingTags extends MetaModelFilterSettingSimpleLookup
 {
 	/**
 	 * {@inheritdoc}
@@ -136,6 +136,16 @@ class MetaModelFilterSettingTags extends MetaModelFilterSetting
 					)
 			)
 		);
+	}
+    
+    /**
+	 * Overrides the parent implementation to always return true, as this setting is always available for FE filtering.
+	 *
+	 * @return bool true as this setting is always available.
+	 */
+	public function enableFEFilterWidget()
+	{
+		return true;
 	}
 }
 

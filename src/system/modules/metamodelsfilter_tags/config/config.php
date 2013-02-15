@@ -27,7 +27,7 @@ if (!defined('TL_ROOT'))
 $GLOBALS['METAMODELS']['filters']['tags'] = array
 (
 	'class' => 'MetaModelFilterSettingTags',
-	'attr_filter' => array('tags','select'),
+	'attr_filter' => array('tags','select', 'translatedselect', 'translatedtags'),
 	'image' => 'system/modules/metamodels/html/filter_frontend.png',
 	'info_callback' => array('TableMetaModelFilterSetting','infoCallback'),
 );
