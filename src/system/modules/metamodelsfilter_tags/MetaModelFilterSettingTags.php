@@ -55,7 +55,7 @@ class MetaModelFilterSettingTags extends MetaModelFilterSettingSimpleLookup
 		$objAttribute = $objMetaModel->getAttributeById($this->get('attr_id'));
 		$strParamName = $this->getParamName();
 		$arrParamValue = $arrFilterUrl[$strParamName];
-		$arrOptions = $objAttribute->getFilterOptions();
+		$arrOptions = $objAttribute->getFilterOptions(null, true);
 
 		if ($objAttribute && $strParamName && is_array($arrParamValue) && $arrOptions)
 		{
