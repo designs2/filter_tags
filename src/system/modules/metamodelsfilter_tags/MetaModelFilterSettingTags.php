@@ -13,11 +13,6 @@
  * @license    LGPL.
  * @filesource
  */
-if (!defined('TL_ROOT'))
-{
-	die('You cannot access this file directly!');
-}
-
 
 /**
  * Filter "tags" for FE-filtering, based on filters by the meta models team.
@@ -29,22 +24,14 @@ if (!defined('TL_ROOT'))
 class MetaModelFilterSettingTags extends MetaModelFilterSettingSimpleLookup
 {
 	/**
-	 * {@inheritdoc}
+	 * Overrides the parent implementation to always return true, as this setting is always available for FE filtering.
+	 *
+	 * @return bool true as this setting is always available.
 	 */
-	protected function getParamName()
+	public function enableFEFilterWidget()
 	{
-		if ($this->get('urlparam'))
-		{
-			return $this->get('urlparam');
-		}
-
-		$objAttribute = $this->getMetaModel()->getAttributeById($this->get('attr_id'));
-		if ($objAttribute)
-		{
-			return $objAttribute->getColName();
-		}
+		return true;
 	}
-
 
 	/**
 	 * {@inheritdoc}
@@ -55,13 +42,14 @@ class MetaModelFilterSettingTags extends MetaModelFilterSettingSimpleLookup
 		$objAttribute = $objMetaModel->getAttributeById($this->get('attr_id'));
 		$strParamName = $this->getParamName();
 		$arrParamValue = $arrFilterUrl[$strParamName];
-		$arrOptions = $objAttribute->getFilterOptions(null, true);
+
+		$arrOptions = $this->getParameterFilterOptions($objAttribute, NULL);
 
 		if ($objAttribute && $strParamName && is_array($arrParamValue) && $arrOptions)
 		{
 
 			$arrIds = array();
- 
+
 			foreach($arrParamValue as $strParamValue)
 			{
 				if($arrOptions[$strParamValue])
@@ -88,57 +76,42 @@ class MetaModelFilterSettingTags extends MetaModelFilterSettingSimpleLookup
 	/**
 	 * {@inheritdoc}
 	 */
-	public function getParameters()
-	{
-		return ($strParamName = $this->getParamName()) ? array($strParamName) : array();
-	}
-
-
-	/**
-	 * {@inheritdoc}
-	 */
-	public function getParameterDCA()
+	public function getParameterFilterWidgets($arrIds, $arrFilterUrl, $arrJumpTo, $blnAutoSubmit)
 	{
 		$objAttribute = $this->getMetaModel()->getAttributeById($this->get('attr_id'));
 
-		$arrLabel = array(
-			($this->get('label') ? $this->get('label') : $objAttribute->getName()),
-			'GET: '.$this->get('urlparam')
-			);
+		$arrOptions = $this->getParameterFilterOptions($objAttribute, $arrIds);
 
-		$arrOptions = $objAttribute->getFilterOptions();
-
-		// show only tags used somewhere
-		if($this->get('onlyused'))
-		{
-			foreach($arrOptions as $key=>$val)
-			{
-				if(count($objAttribute->searchFor($key)) < 1)
-				{
-					unset($arrOptions[$key]);
-				}
-			}
-		}
+		asort($arrOptions);
 
 		return array(
-			$this->getParamName() => array
+			$this->getParamName() => $this->prepareFrontendFilterWidget(array
 			(
-				'label'     => $arrLabel,
+				'label'     => array(
+					// TODO: make this multilingual.
+					($this->get('label') ? $this->get('label') : $objAttribute->getName()),
+					'GET: ' . $this->getParamName()
+				),
 				'inputType' => 'tags',
 				'options'   => $arrOptions,
 				'eval'      => array(
+					'includeBlankOption' => ($this->get('blankoption') ? true : false),
+					'blankOptionLabel'   => &$GLOBALS['TL_LANG']['metamodels_frontendfilter']['do_not_filter'],
 					'multiple'     => true,
 					'colname'      => $objAttribute->getColname(),
-					'urlparam'     => $this->get('urlparam'),
+					'urlparam'     => $this->getParamName(),
 					'onlyused'     => $this->get('onlyused'),
 					'onlypossible' => $this->get('onlypossible'),
-					'template'           => $this->get('template')
+					'template'     => $this->get('template')
 					)
-			)
+			),
+			$arrFilterUrl,
+			$arrJumpTo,
+			$blnAutoSubmit)
 		);
 	}
-    
-    /**
+
+	/**
 	 * Overrides the parent implementation to always return true, as this setting is always available for FE filtering.
 	 *
 	 * @return bool true as this setting is always available.
@@ -149,4 +122,3 @@ class MetaModelFilterSettingTags extends MetaModelFilterSettingSimpleLookup
 	}
 }
 
-?>
