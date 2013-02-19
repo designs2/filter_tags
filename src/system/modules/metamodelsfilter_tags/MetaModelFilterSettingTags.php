@@ -152,8 +152,9 @@ class MetaModelFilterSettingTags extends MetaModelFilterSettingSimpleLookup
 			{
 				$arrParamValue = null;
 			}
+
 			// also hacky, the magic value of '--all--' means check all items in the widget.
-			if (in_array('--all--', $arrParamValue))
+			if (is_array($arrParamValue) && in_array('--all--', $arrParamValue))
 			{
 				$arrParamValue = array_keys($arrOptions);
 			}
