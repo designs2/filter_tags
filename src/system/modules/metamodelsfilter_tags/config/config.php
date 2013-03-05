@@ -1,4 +1,5 @@
 <?php
+
 /**
  * The MetaModels extension allows the creation of multiple collections of custom items,
  * each with its own unique set of selectable attributes, with attribute extendability.
@@ -7,29 +8,22 @@
  *
  * PHP version 5
  * @package    MetaModels
- * @subpackage FrontendFilter
+ * @subpackage FilterTags
  * @author     Christian de la Haye <service@delahaye.de>
  * @copyright  The MetaModels team.
  * @license    LGPL.
  * @filesource
  */
-if (!defined('TL_ROOT'))
-{
-	die('You cannot access this file directly!');
-}
-
 
 /**
  * Frontend filter
  */
 
-// tags
+// Tags
 $GLOBALS['METAMODELS']['filters']['tags'] = array
 (
 	'class' => 'MetaModelFilterSettingTags',
 	'attr_filter' => array('tags','select', 'translatedselect', 'translatedtags'),
-	'image' => 'system/modules/metamodels/html/filter_frontend.png',
+	'image' => 'system/modules/metamodelsfilter_tags/html/filter_tags.png',
 	'info_callback' => array('TableMetaModelFilterSetting','infoCallback'),
 );
-
-?>
