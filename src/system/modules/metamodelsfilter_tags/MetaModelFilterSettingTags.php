@@ -134,8 +134,6 @@ class MetaModelFilterSettingTags extends MetaModelFilterSettingSimpleLookup
 
 		$arrOptions = $this->getParameterFilterOptions($objAttribute, $arrIds);
 
-		asort($arrOptions);
-
 		$strParamName = $this->getParamName();
 		$arrMyFilterUrl = $arrFilterUrl;
 		// if we have a value, we have to explode it by comma to have a valid value which the active checks may cope with.
