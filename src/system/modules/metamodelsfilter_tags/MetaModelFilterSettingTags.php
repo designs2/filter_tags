@@ -128,7 +128,7 @@ class MetaModelFilterSettingTags extends MetaModelFilterSettingSimpleLookup
 	/**
 	 * {@inheritdoc}
 	 */
-	public function getParameterFilterWidgets($arrIds, $arrFilterUrl, $arrJumpTo, $blnAutoSubmit)
+	public function getParameterFilterWidgets($arrIds, $arrFilterUrl, $arrJumpTo, $blnAutoSubmit, $blnHideClearFilter)
 	{
 		$objAttribute = $this->getMetaModel()->getAttributeById($this->get('attr_id'));
 
@@ -175,7 +175,7 @@ class MetaModelFilterSettingTags extends MetaModelFilterSettingSimpleLookup
 				'inputType' => 'tags',
 				'options'   => $arrOptions,
 				'eval'      => array(
-					'includeBlankOption' => ($this->get('blankoption') ? true : false),
+					'includeBlankOption' => ($this->get('blankoption') && !$blnHideClearFilter ? true : false),
 					'blankOptionLabel'   => &$GLOBALS['TL_LANG']['metamodels_frontendfilter']['do_not_filter'],
 					'multiple'     => true,
 					'colname'      => $objAttribute->getColname(),
