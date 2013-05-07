@@ -163,6 +163,8 @@ class MetaModelFilterSettingTags extends MetaModelFilterSettingSimpleLookup
 				$arrMyFilterUrl[$strParamName] = $arrParamValue;
 			}
 		}
+		
+		$GLOBALS['MM_FILTER_PARAMS'][] = $strParamName;
 
 		return array(
 			$this->getParamName() => $this->prepareFrontendFilterWidget(array
