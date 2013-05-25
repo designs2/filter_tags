@@ -132,8 +132,9 @@ class MetaModelFilterSettingTags extends MetaModelFilterSettingSimpleLookup
 	{
 		$objAttribute = $this->getMetaModel()->getAttributeById($this->get('attr_id'));
 
-		$arrOptions = $this->getParameterFilterOptions($objAttribute, $arrIds);
-
+		$arrCount = array();
+		$arrOptions = $this->getParameterFilterOptions($objAttribute, $arrIds, $arrCount);
+		
 		$strParamName = $this->getParamName();
 		$arrMyFilterUrl = $arrFilterUrl;
 		// if we have a value, we have to explode it by comma to have a valid value which the active checks may cope with.
@@ -176,6 +177,7 @@ class MetaModelFilterSettingTags extends MetaModelFilterSettingSimpleLookup
 				),
 				'inputType' => 'tags',
 				'options'   => $arrOptions,
+				'count'	    => $arrCount,
 				'eval'      => array(
 					'includeBlankOption' => ($this->get('blankoption') && !$blnHideClearFilter ? true : false),
 					'blankOptionLabel'   => &$GLOBALS['TL_LANG']['metamodels_frontendfilter']['do_not_filter'],
