@@ -128,7 +128,7 @@ class MetaModelFilterSettingTags extends MetaModelFilterSettingSimpleLookup
 	/**
 	 * {@inheritdoc}
 	 */
-	public function getParameterFilterWidgets($arrIds, $arrFilterUrl, $arrJumpTo, $blnAutoSubmit, $blnHideClearFilter)
+	public function getParameterFilterWidgets($arrIds, $arrFilterUrl, $arrJumpTo, MetaModelFrontendFilterOptions $objFrontendFilterOptions)
 	{
 		$objAttribute = $this->getMetaModel()->getAttributeById($this->get('attr_id'));
 
@@ -178,8 +178,9 @@ class MetaModelFilterSettingTags extends MetaModelFilterSettingSimpleLookup
 				'inputType' => 'tags',
 				'options'   => $arrOptions,
 				'count'	    => $arrCount,
+				'showCount'	=> $objFrontendFilterOptions->isShowCountValues(),
 				'eval'      => array(
-					'includeBlankOption' => ($this->get('blankoption') && !$blnHideClearFilter ? true : false),
+					'includeBlankOption' => ($this->get('blankoption') && !$objFrontendFilterOptions->isShowCountValues() ? true : false),
 					'blankOptionLabel'   => &$GLOBALS['TL_LANG']['metamodels_frontendfilter']['do_not_filter'],
 					'multiple'     => true,
 					'colname'      => $objAttribute->getColname(),
@@ -193,7 +194,7 @@ class MetaModelFilterSettingTags extends MetaModelFilterSettingSimpleLookup
 			),
 			$arrMyFilterUrl,
 			$arrJumpTo,
-			$blnAutoSubmit)
+			$objFrontendFilterOptions)
 		);
 	}
 }
