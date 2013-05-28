@@ -180,7 +180,7 @@ class MetaModelFilterSettingTags extends MetaModelFilterSettingSimpleLookup
 				'count'	    => $arrCount,
 				'showCount'	=> $objFrontendFilterOptions->isShowCountValues(),
 				'eval'      => array(
-					'includeBlankOption' => ($this->get('blankoption') && !$objFrontendFilterOptions->isShowCountValues() ? true : false),
+					'includeBlankOption' => ($this->get('blankoption') && !$objFrontendFilterOptions->isHideClearFilter() ? true : false),
 					'blankOptionLabel'   => &$GLOBALS['TL_LANG']['metamodels_frontendfilter']['do_not_filter'],
 					'multiple'     => true,
 					'colname'      => $objAttribute->getColname(),
