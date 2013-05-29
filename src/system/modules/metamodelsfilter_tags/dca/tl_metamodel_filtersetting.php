@@ -32,8 +32,9 @@ $GLOBALS['TL_DCA']['tl_metamodel_filtersetting']['fields']['onlyused'] = array
 	'exclude'                 => true,
 	'default'                 => true,
 	'inputType'               => 'checkbox',
-	'eval'                    => array(
-		'tl_class'            => 'w50 clr',
+	'eval'                    => array
+	(
+		'tl_class'            => 'w50',
 	),
 );
 
@@ -43,7 +44,8 @@ $GLOBALS['TL_DCA']['tl_metamodel_filtersetting']['fields']['onlypossible'] = arr
 	'exclude'                 => true,
 	'default'                 => true,
 	'inputType'               => 'checkbox',
-	'eval'                    => array(
+	'eval'                    => array
+	(
 		'tl_class'            => 'w50',
 	),
 );
@@ -54,7 +56,8 @@ $GLOBALS['TL_DCA']['tl_metamodel_filtersetting']['fields']['useor'] = array
 	'exclude'                 => true,
 	'default'                 => true,
 	'inputType'               => 'checkbox',
-	'eval'                    => array(
+	'eval'                    => array
+	(
 		'tl_class'            => 'w50',
 	),
 );
