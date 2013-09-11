@@ -18,10 +18,14 @@
 /**
  * Frontend filter
  */
-$GLOBALS['METAMODELS']['filters']['tags']['class'] = 'MetaModelFilterSettingTags';
-$GLOBALS['METAMODELS']['filters']['tags']['image'] = 'system/modules/metamodelsfilter_tags/html/filter_tags.png';
-$GLOBALS['METAMODELS']['filters']['tags']['info_callback'] = array('TableMetaModelFilterSetting', 'infoCallback');
+$GLOBALS['METAMODELS']['filters']['tags']['class']         = 'MetaModels\Filter\Setting\Tags';
+$GLOBALS['METAMODELS']['filters']['tags']['image']         = 'system/modules/metamodelsfilter_tags/html/filter_tags.png';
+$GLOBALS['METAMODELS']['filters']['tags']['info_callback'] = array('MetaModels\Dca\Filter', 'infoCallback');
 $GLOBALS['METAMODELS']['filters']['tags']['attr_filter'][] = 'select';
 $GLOBALS['METAMODELS']['filters']['tags']['attr_filter'][] = 'text';
 $GLOBALS['METAMODELS']['filters']['tags']['attr_filter'][] = 'translatedselect';
 $GLOBALS['METAMODELS']['filters']['tags']['attr_filter'][] = 'translatedtags';
+
+// non composerized Contao 2.X autoload support.
+$GLOBALS['MM_AUTOLOAD'][] = dirname(__DIR__);
+$GLOBALS['MM_AUTOLOAD'][] = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'deprecated';

@@ -21,5 +21,7 @@
  */
 ClassLoader::addClasses(array
 (
-	'MetaModelFilterSettingTags'         => 'system/modules/metamodelsfilter_tags/MetaModelFilterSettingTags.php',
+	'MetaModels\Filter\Setting\Tags' => 'system/modules/metamodelsfilter_tags/MetaModels/Filter/Setting/Tags.php',
+
+	'MetaModelFilterSettingTags'     => 'system/modules/metamodelsfilter_tags/deprecated/MetaModelFilterSettingTags.php',
 ));

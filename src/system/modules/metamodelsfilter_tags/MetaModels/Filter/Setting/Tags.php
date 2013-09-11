@@ -15,6 +15,16 @@
  * @filesource
  */
 
+namespace MetaModels\Filter\Setting;
+
+use MetaModels\Filter\Filter;
+use MetaModels\Filter\IFilter;
+use MetaModels\Filter\Rules\Condition\ConditionAnd;
+use MetaModels\Filter\Rules\Condition\ConditionOr;
+use MetaModels\Filter\Rules\SearchAttribute;
+use MetaModels\Filter\Rules\StaticIdList;
+use MetaModels\FrontendIntegration\FrontendFilterOptions;
+
 /**
  * Filter "tags" for FE-filtering, based on filters by the MetaModels team.
  *
@@ -22,7 +32,7 @@
  * @subpackage FilterTags
  * @author     Christian de la Haye <service@delahaye.de>
  */
-class MetaModelFilterSettingTags extends MetaModelFilterSettingSimpleLookup
+class Tags extends SimpleLookup
 {
 	/**
 	 * Overrides the parent implementation to always return true, as this setting is always available for FE filtering.
@@ -61,7 +71,7 @@ class MetaModelFilterSettingTags extends MetaModelFilterSettingSimpleLookup
 	/**
 	 * {@inheritdoc}
 	 */
-	public function prepareRules(IMetaModelFilter $objFilter, $arrFilterUrl)
+	public function prepareRules(IFilter $objFilter, $arrFilterUrl)
 	{
 		$objMetaModel = $this->getMetaModel();
 		$objAttribute = $objMetaModel->getAttributeById($this->get('attr_id'));
@@ -98,9 +108,9 @@ class MetaModelFilterSettingTags extends MetaModelFilterSettingSimpleLookup
 			// determine which parenting rule to use, AND or OR.
 			if ($objAttribute->get('type')=='select' || $this->get('useor'))
 			{
-				$objParentRule = new MetaModelFilterRuleOR();
+				$objParentRule = new ConditionOr();
 			} else {
-				$objParentRule = new MetaModelFilterRuleAND();
+				$objParentRule = new ConditionAnd();
 			}
 
 			// we allow the current and the fallback language to be searched by default.
@@ -111,8 +121,8 @@ class MetaModelFilterSettingTags extends MetaModelFilterSettingSimpleLookup
 				// restrict to valid options for obvious reasons.
 				if(array_key_exists($strParamValue, $arrOptions))
 				{
-					$objSubFilter = new MetaModelFilter($objMetaModel);
-					$objSubFilter->addFilterRule(new MetaModelFilterRuleSearchAttribute($objAttribute, $strParamValue, $arrValidLanguages));
+					$objSubFilter = new Filter($objMetaModel);
+					$objSubFilter->addFilterRule(new SearchAttribute($objAttribute, $strParamValue, $arrValidLanguages));
 					$objParentRule->addChild($objSubFilter);
 				}
 			}
@@ -122,13 +132,13 @@ class MetaModelFilterSettingTags extends MetaModelFilterSettingSimpleLookup
 		}
 
 		// if no setting has been defined, we appear transparently as "not defined" and return all items.
-		$objFilter->addFilterRule(new MetaModelFilterRuleStaticIdList(NULL));
+		$objFilter->addFilterRule(new StaticIdList(NULL));
 	}
 
 	/**
 	 * {@inheritdoc}
 	 */
-	public function getParameterFilterWidgets($arrIds, $arrFilterUrl, $arrJumpTo, MetaModelFrontendFilterOptions $objFrontendFilterOptions)
+	public function getParameterFilterWidgets($arrIds, $arrFilterUrl, $arrJumpTo, FrontendFilterOptions $objFrontendFilterOptions)
 	{
 		$objAttribute = $this->getMetaModel()->getAttributeById($this->get('attr_id'));
 
@@ -169,32 +179,32 @@ class MetaModelFilterSettingTags extends MetaModelFilterSettingSimpleLookup
 
 		return array(
 			$this->getParamName() => $this->prepareFrontendFilterWidget(array
-			(
-				'label'     => array(
-					// TODO: make this multilingual.
-					($this->get('label') ? $this->get('label') : $objAttribute->getName()),
-					'GET: ' . $strParamName
-				),
-				'inputType' => 'tags',
-				'options'   => $arrOptions,
-				'count'     => $arrCount,
-				'showCount' => $objFrontendFilterOptions->isShowCountValues(),
-				'eval'      => array(
-					'includeBlankOption' => ($this->get('blankoption') && !$objFrontendFilterOptions->isHideClearFilter() ? true : false),
-					'blankOptionLabel'   => &$GLOBALS['TL_LANG']['metamodels_frontendfilter']['do_not_filter'],
-					'multiple'     => true,
-					'colname'      => $objAttribute->getColname(),
-					'urlparam'     => $strParamName,
-					'onlyused'     => $this->get('onlyused'),
-					'onlypossible' => $this->get('onlypossible'),
-					'template'     => $this->get('template')
+				(
+					'label'     => array(
+						// TODO: make this multilingual.
+						($this->get('label') ? $this->get('label') : $objAttribute->getName()),
+						'GET: ' . $strParamName
 					),
-				// we need to implode again to have it transported correctly in the frontend filter.
-				'urlvalue' => !empty($arrParamValue) ? implode(',', $arrParamValue) : ''
-			),
-			$arrMyFilterUrl,
-			$arrJumpTo,
-			$objFrontendFilterOptions)
+					'inputType' => 'tags',
+					'options'   => $arrOptions,
+					'count'     => $arrCount,
+					'showCount' => $objFrontendFilterOptions->isShowCountValues(),
+					'eval'      => array(
+						'includeBlankOption' => ($this->get('blankoption') && !$objFrontendFilterOptions->isHideClearFilter() ? true : false),
+						'blankOptionLabel'   => &$GLOBALS['TL_LANG']['metamodels_frontendfilter']['do_not_filter'],
+						'multiple'     => true,
+						'colname'      => $objAttribute->getColname(),
+						'urlparam'     => $strParamName,
+						'onlyused'     => $this->get('onlyused'),
+						'onlypossible' => $this->get('onlypossible'),
+						'template'     => $this->get('template')
+					),
+					// we need to implode again to have it transported correctly in the frontend filter.
+					'urlvalue' => !empty($arrParamValue) ? implode(',', $arrParamValue) : ''
+				),
+				$arrMyFilterUrl,
+				$arrJumpTo,
+				$objFrontendFilterOptions)
 		);
 	}
 }
