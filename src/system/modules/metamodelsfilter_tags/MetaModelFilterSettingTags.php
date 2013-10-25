@@ -134,7 +134,7 @@ class MetaModelFilterSettingTags extends MetaModelFilterSettingSimpleLookup
 
 		$arrCount = array();
 		$arrOptions = $this->getParameterFilterOptions($objAttribute, $arrIds, $arrCount);
-		
+
 		$strParamName = $this->getParamName();
 		$arrMyFilterUrl = $arrFilterUrl;
 		// if we have a value, we have to explode it by comma to have a valid value which the active checks may cope with.
@@ -164,7 +164,7 @@ class MetaModelFilterSettingTags extends MetaModelFilterSettingSimpleLookup
 				$arrMyFilterUrl[$strParamName] = $arrParamValue;
 			}
 		}
-		
+
 		$GLOBALS['MM_FILTER_PARAMS'][] = $strParamName;
 
 		return array(
@@ -177,8 +177,8 @@ class MetaModelFilterSettingTags extends MetaModelFilterSettingSimpleLookup
 				),
 				'inputType' => 'tags',
 				'options'   => $arrOptions,
-				'count'	    => $arrCount,
-				'showCount'	=> $objFrontendFilterOptions->isShowCountValues(),
+				'count'     => $arrCount,
+				'showCount' => $objFrontendFilterOptions->isShowCountValues(),
 				'eval'      => array(
 					'includeBlankOption' => ($this->get('blankoption') && !$objFrontendFilterOptions->isHideClearFilter() ? true : false),
 					'blankOptionLabel'   => &$GLOBALS['TL_LANG']['metamodels_frontendfilter']['do_not_filter'],

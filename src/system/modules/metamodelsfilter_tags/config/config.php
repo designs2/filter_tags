@@ -18,12 +18,10 @@
 /**
  * Frontend filter
  */
-
-// Tags
-$GLOBALS['METAMODELS']['filters']['tags'] = array
-(
-	'class' => 'MetaModelFilterSettingTags',
-	'attr_filter' => array('tags','select', 'translatedselect', 'translatedtags'),
-	'image' => 'system/modules/metamodelsfilter_tags/html/filter_tags.png',
-	'info_callback' => array('TableMetaModelFilterSetting','infoCallback'),
-);
+$GLOBALS['METAMODELS']['filters']['tags']['class'] = 'MetaModelFilterSettingTags';
+$GLOBALS['METAMODELS']['filters']['tags']['image'] = 'system/modules/metamodelsfilter_tags/html/filter_tags.png';
+$GLOBALS['METAMODELS']['filters']['tags']['info_callback'] = array('TableMetaModelFilterSetting', 'infoCallback');
+$GLOBALS['METAMODELS']['filters']['tags']['attr_filter'][] = 'select';
+$GLOBALS['METAMODELS']['filters']['tags']['attr_filter'][] = 'text';
+$GLOBALS['METAMODELS']['filters']['tags']['attr_filter'][] = 'translatedselect';
+$GLOBALS['METAMODELS']['filters']['tags']['attr_filter'][] = 'translatedtags';
