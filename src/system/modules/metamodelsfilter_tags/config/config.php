@@ -22,7 +22,7 @@ $GLOBALS['METAMODELS']['filters']['tags']['class']         = 'MetaModels\Filter\
 $GLOBALS['METAMODELS']['filters']['tags']['image']         = 'system/modules/metamodelsfilter_tags/html/filter_tags.png';
 $GLOBALS['METAMODELS']['filters']['tags']['info_callback'] = array('MetaModels\Dca\Filter', 'infoCallback');
 $GLOBALS['METAMODELS']['filters']['tags']['attr_filter'][] = 'select';
-$GLOBALS['METAMODELS']['filters']['tags']['attr_filter'][] = 'text';
+$GLOBALS['METAMODELS']['filters']['tags']['attr_filter'][] = 'tags';
 $GLOBALS['METAMODELS']['filters']['tags']['attr_filter'][] = 'translatedselect';
 $GLOBALS['METAMODELS']['filters']['tags']['attr_filter'][] = 'translatedtags';
 
