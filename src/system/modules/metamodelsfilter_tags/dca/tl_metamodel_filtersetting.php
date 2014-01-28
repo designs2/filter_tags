@@ -20,7 +20,7 @@
  */
 $GLOBALS['TL_DCA']['tl_metamodel_filtersetting']['metapalettes']['tags extends default'] = array
 (
-	'+config' => array('attr_id', 'urlparam', 'label', 'template', 'useor', 'onlyused', 'onlypossible'),
+	'+config' => array('attr_id', 'urlparam', 'label', 'template', 'useor', 'onlyused', 'onlypossible', 'skipfilteroptions'),
 );
 
 /**
