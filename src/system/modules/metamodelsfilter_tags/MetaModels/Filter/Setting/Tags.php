@@ -58,7 +58,7 @@ class Tags extends SimpleLookup
 	protected function getFrontendFilterValue($arrWidget, $arrFilterUrl, $strKeyOption)
 	{
 		$arrCurrent = (array)$arrWidget['value'];
-		// toggle if active.
+
 		if ($this->isActiveFrontendFilterValue($arrWidget, $arrFilterUrl, $strKeyOption))
 		{
 			$arrCurrent = array_diff($arrCurrent, array($strKeyOption));
@@ -77,7 +77,7 @@ class Tags extends SimpleLookup
 		$objAttribute = $objMetaModel->getAttributeById($this->get('attr_id'));
 		$strParamName = $this->getParamName();
 
-		$arrParamValue = NULL;
+		$arrParamValue = null;
 		if (array_key_exists($strParamName, $arrFilterUrl) && !empty($arrFilterUrl[$strParamName]))
 		{
 			if (is_array($arrFilterUrl[$strParamName]))
@@ -88,15 +88,15 @@ class Tags extends SimpleLookup
 			}
 		}
 
-		$arrOptions = $this->getParameterFilterOptions($objAttribute, NULL);
+		$arrOptions = $this->getParameterFilterOptions($objAttribute, null);
 
-		// filter out the magic keyword for none selected.
+		// Filter out the magic keyword for none selected.
 		if ($arrParamValue && in_array('--none--', $arrParamValue))
 		{
 			$arrParamValue = array();
 		}
 
-		// filter out the magic keyword for all selected.
+		// Filter out the magic keyword for all selected.
 		if ($arrParamValue && in_array('--all--', $arrParamValue))
 		{
 			$arrParamValue = array_keys($arrOptions);
@@ -108,17 +108,19 @@ class Tags extends SimpleLookup
 			if ($this->get('useor'))
 			{
 				$objParentRule = new ConditionOr();
-			} else {
+			}
+			else
+			{
 				$objParentRule = new ConditionAnd();
 			}
 
-			// we allow the current and the fallback language to be searched by default.
+			// We allow the current and the fallback language to be searched by default.
 			$arrValidLanguages = array($this->getMetaModel()->getActiveLanguage(), $this->getMetaModel()->getFallbackLanguage());
 
-			foreach($arrParamValue as $strParamValue)
+			foreach ($arrParamValue as $strParamValue)
 			{
-				// restrict to valid options for obvious reasons.
-				if(array_key_exists($strParamValue, $arrOptions))
+				// Restrict to valid options for obvious reasons.
+				if (array_key_exists($strParamValue, $arrOptions))
 				{
 					$objSubFilter = new Filter($objMetaModel);
 					$objSubFilter->addFilterRule(new SearchAttribute($objAttribute, $strParamValue, $arrValidLanguages));
@@ -130,23 +132,28 @@ class Tags extends SimpleLookup
 			return;
 		}
 
-		// if no setting has been defined, we appear transparently as "not defined" and return all items.
-		$objFilter->addFilterRule(new StaticIdList(NULL));
+		// If no setting has been defined, we appear transparently as "not defined" and return all items.
+		$objFilter->addFilterRule(new StaticIdList(null));
 	}
 
 	/**
 	 * {@inheritdoc}
 	 */
-	public function getParameterFilterWidgets($arrIds, $arrFilterUrl, $arrJumpTo, FrontendFilterOptions $objFrontendFilterOptions)
+	public function getParameterFilterWidgets(
+		$arrIds,
+		$arrFilterUrl,
+		$arrJumpTo,
+		FrontendFilterOptions $objFrontendFilterOptions
+	)
 	{
 		$objAttribute = $this->getMetaModel()->getAttributeById($this->get('attr_id'));
 
-		$arrCount = array();
+		$arrCount   = array();
 		$arrOptions = $this->getParameterFilterOptions($objAttribute, $arrIds, $arrCount);
 
-		$strParamName = $this->getParamName();
+		$strParamName   = $this->getParamName();
 		$arrMyFilterUrl = $arrFilterUrl;
-		// if we have a value, we have to explode it by comma to have a valid value which the active checks may cope with.
+		// If we have a value, we have to explode it by comma to have a valid value which the active checks may cope with.
 		if (array_key_exists($strParamName, $arrFilterUrl) && !empty($arrFilterUrl[$strParamName]))
 		{
 			if (is_array($arrFilterUrl[$strParamName]))
@@ -156,13 +163,13 @@ class Tags extends SimpleLookup
 				$arrParamValue = explode(',', $arrFilterUrl[$strParamName]);
 			}
 
-			// ok, this is rather hacky here. The magic value of '--none--' means clear in the widget.
+			// Ok, this is rather hacky here. The magic value of '--none--' means clear in the widget.
 			if (in_array('--none--', $arrParamValue))
 			{
 				$arrParamValue = null;
 			}
 
-			// also hacky, the magic value of '--all--' means check all items in the widget.
+			// Also hacky, the magic value of '--all--' means check all items in the widget.
 			if (is_array($arrParamValue) && in_array('--all--', $arrParamValue))
 			{
 				$arrParamValue = array_keys($arrOptions);
@@ -180,7 +187,6 @@ class Tags extends SimpleLookup
 			$this->getParamName() => $this->prepareFrontendFilterWidget(array
 				(
 					'label'     => array(
-						// TODO: make this multilingual.
 						($this->get('label') ? $this->get('label') : $objAttribute->getName()),
 						'GET: ' . $strParamName
 					),
@@ -189,7 +195,10 @@ class Tags extends SimpleLookup
 					'count'     => $arrCount,
 					'showCount' => $objFrontendFilterOptions->isShowCountValues(),
 					'eval'      => array(
-						'includeBlankOption' => ($this->get('blankoption') && !$objFrontendFilterOptions->isHideClearFilter() ? true : false),
+						'includeBlankOption' => (
+							$this->get('blankoption')
+							&& !$objFrontendFilterOptions->isHideClearFilter()
+						),
 						'blankOptionLabel'   => &$GLOBALS['TL_LANG']['metamodels_frontendfilter']['do_not_filter'],
 						'multiple'     => true,
 						'colname'      => $objAttribute->getColname(),
@@ -198,7 +207,7 @@ class Tags extends SimpleLookup
 						'onlypossible' => $this->get('onlypossible'),
 						'template'     => $this->get('template')
 					),
-					// we need to implode again to have it transported correctly in the frontend filter.
+					// We need to implode again to have it transported correctly in the frontend filter.
 					'urlvalue' => !empty($arrParamValue) ? implode(',', $arrParamValue) : ''
 				),
 				$arrMyFilterUrl,

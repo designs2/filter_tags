@@ -15,17 +15,21 @@
  * @filesource
  */
 
-/**
- * palettes
- */
 $GLOBALS['TL_DCA']['tl_metamodel_filtersetting']['metapalettes']['tags extends default'] = array
 (
-	'+config' => array('attr_id', 'urlparam', 'label', 'template', 'useor', 'onlyused', 'onlypossible', 'skipfilteroptions'),
+	'+config' => array
+	(
+		'attr_id',
+		'urlparam',
+		'label',
+		'template',
+		'useor',
+		'onlyused',
+		'onlypossible',
+		'skipfilteroptions'
+	),
 );
 
-/**
- * fields
- */
 $GLOBALS['TL_DCA']['tl_metamodel_filtersetting']['fields']['onlyused'] = array
 (
 	'label'                   => &$GLOBALS['TL_LANG']['tl_metamodel_filtersetting']['onlyused'],

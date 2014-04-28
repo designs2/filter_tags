@@ -19,8 +19,13 @@
  * Frontend filter
  */
 $GLOBALS['METAMODELS']['filters']['tags']['class']         = 'MetaModels\Filter\Setting\Tags';
-$GLOBALS['METAMODELS']['filters']['tags']['image']         = 'system/modules/metamodelsfilter_tags/html/filter_tags.png';
-$GLOBALS['METAMODELS']['filters']['tags']['info_callback'] = array('MetaModels\DcGeneral\Events\Table\FilterSetting\DrawSetting', 'modelToLabelWithAttributeAndUrlParam');
+$GLOBALS['METAMODELS']['filters']['tags']['image']         =
+	'system/modules/metamodelsfilter_tags/html/filter_tags.png';
+$GLOBALS['METAMODELS']['filters']['tags']['info_callback'] = array
+(
+	'MetaModels\DcGeneral\Events\Table\FilterSetting\DrawSetting',
+	'modelToLabelWithAttributeAndUrlParam'
+);
 $GLOBALS['METAMODELS']['filters']['tags']['attr_filter'][] = 'select';
 $GLOBALS['METAMODELS']['filters']['tags']['attr_filter'][] = 'text';
 $GLOBALS['METAMODELS']['filters']['tags']['attr_filter'][] = 'tags';
