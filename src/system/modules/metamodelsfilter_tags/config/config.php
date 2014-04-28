@@ -23,5 +23,6 @@ $GLOBALS['METAMODELS']['filters']['tags']['image']         = 'system/modules/met
 $GLOBALS['METAMODELS']['filters']['tags']['info_callback'] = array('MetaModels\DcGeneral\Events\Table\FilterSetting\DrawSetting', 'modelToLabelWithAttributeAndUrlParam');
 $GLOBALS['METAMODELS']['filters']['tags']['attr_filter'][] = 'select';
 $GLOBALS['METAMODELS']['filters']['tags']['attr_filter'][] = 'text';
+$GLOBALS['METAMODELS']['filters']['tags']['attr_filter'][] = 'tags';
 $GLOBALS['METAMODELS']['filters']['tags']['attr_filter'][] = 'translatedselect';
 $GLOBALS['METAMODELS']['filters']['tags']['attr_filter'][] = 'translatedtags';
