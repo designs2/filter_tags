@@ -104,9 +104,8 @@ class Tags extends SimpleLookup
 
 		if ($objAttribute && $strParamName && is_array($arrParamValue) && $arrOptions)
 		{
-			// TODO: @CS this check for type of "select" is really an very evil hack. We should reconsider it. Leaving it in place for now though, as it was put here by DLH for a good reason I suppose.
-			// determine which parenting rule to use, AND or OR.
-			if ($objAttribute->get('type')=='select' || $this->get('useor'))
+			// Determine which parenting rule to use, AND or OR.
+			if ($this->get('useor'))
 			{
 				$objParentRule = new ConditionOr();
 			} else {
