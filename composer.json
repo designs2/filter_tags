@@ -54,13 +54,13 @@
 	},
 	"autoload": {
 		"psr-0": {
-			"MetaModels": "src/system/modules/metamodelsfilter_tags"
+			"MetaModels": "src"
 		}
 	},
 	"extra":{
 		"contao": {
-			"symlinks":{
-				"src/system/modules/metamodelsfilter_tags":"system/modules/metamodelsfilter_tags"
+			"sources":{
+				"contao":"system/modules/metamodelsfilter_tags"
 			},
 			"transifex": {
 				"project": "metamodels",
