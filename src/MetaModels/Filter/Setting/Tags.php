@@ -77,26 +77,9 @@ class Tags extends SimpleLookup
         $objAttribute = $objMetaModel->getAttributeById($this->get('attr_id'));
         $strParamName = $this->getParamName();
 
-        $arrParamValue = null;
-        if (array_key_exists($strParamName, $arrFilterUrl) && !empty($arrFilterUrl[$strParamName])) {
-            if (is_array($arrFilterUrl[$strParamName])) {
-                $arrParamValue = $arrFilterUrl[$strParamName];
-            } else {
-                $arrParamValue = explode(',', $arrFilterUrl[$strParamName]);
-            }
-        }
-
-        $arrOptions = $this->getParameterFilterOptions($objAttribute, null);
-
-        // Filter out the magic keyword for none selected.
-        if ($arrParamValue && in_array('--none--', $arrParamValue)) {
-            $arrParamValue = array();
-        }
-
-        // Filter out the magic keyword for all selected.
-        if ($arrParamValue && in_array('--all--', $arrParamValue)) {
-            $arrParamValue = array_keys($arrOptions);
-        }
+        $arrParamValue = $this->buildParamValue($arrFilterUrl, $strParamName);
+        $arrOptions    = $this->getParameterFilterOptions($objAttribute, null);
+        $arrParamValue = $this->filterParamValue($arrParamValue, $arrOptions);
 
         if ($objAttribute && $strParamName && is_array($arrParamValue) && $arrOptions) {
             // Determine which parenting rule to use, AND or OR.
@@ -207,5 +190,48 @@ class Tags extends SimpleLookup
                 $objFrontendFilterOptions
             )
         );
+    }
+
+    /**
+     * @param $arrFilterUrl
+     * @param $strParamName
+     *
+     * @return array|null
+     */
+    private function buildParamValue($arrFilterUrl, $strParamName)
+    {
+        $arrParamValue = null;
+        if (array_key_exists($strParamName, $arrFilterUrl) && !empty($arrFilterUrl[$strParamName])) {
+            if (is_array($arrFilterUrl[$strParamName])) {
+                $arrParamValue = $arrFilterUrl[$strParamName];
+            } else {
+                $arrParamValue = explode(',', $arrFilterUrl[$strParamName]);
+            }
+        }
+
+        return $arrParamValue;
+    }
+
+    /**
+     * @param $arrParamValue
+     * @param $arrOptions
+     *
+     * @return array
+     */
+    private function filterParamValue($arrParamValue, $arrOptions)
+    {
+        // Filter out the magic keyword for none selected.
+        if ($arrParamValue && in_array('--none--', $arrParamValue)) {
+            $arrParamValue = array();
+        }
+
+        // Filter out the magic keyword for all selected.
+        if ($arrParamValue && in_array('--all--', $arrParamValue)) {
+            $arrParamValue = array_keys($arrOptions);
+
+            return $arrParamValue;
+        }
+
+        return $arrParamValue;
     }
 }
