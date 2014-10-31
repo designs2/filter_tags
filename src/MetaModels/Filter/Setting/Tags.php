@@ -79,7 +79,7 @@ class Tags extends SimpleLookup
 
         $arrParamValue = $this->buildParamValue($arrFilterUrl, $strParamName);
         $arrOptions    = $this->getParameterFilterOptions($objAttribute, null);
-        $arrParamValue = $this->filterParamValue($arrParamValue, $arrOptions);
+        $arrParamValue = $this->filterParamValue($arrParamValue, $arrOptions, array());
 
         if ($objAttribute && $strParamName && is_array($arrParamValue) && $arrOptions) {
             // Determine which parenting rule to use, AND or OR.
@@ -141,15 +141,7 @@ class Tags extends SimpleLookup
                 $arrParamValue = explode(',', $arrFilterUrl[$strParamName]);
             }
 
-            // Ok, this is rather hacky here. The magic value of '--none--' means clear in the widget.
-            if (in_array('--none--', $arrParamValue)) {
-                $arrParamValue = null;
-            }
-
-            // Also hacky, the magic value of '--all--' means check all items in the widget.
-            if (is_array($arrParamValue) && in_array('--all--', $arrParamValue)) {
-                $arrParamValue = array_keys($arrOptions);
-            }
+            $arrParamValue = $this->filterParamValue($arrParamValue, $arrOptions);
 
             if ($arrParamValue) {
                 $arrMyFilterUrl[$strParamName] = $arrParamValue;
@@ -213,16 +205,17 @@ class Tags extends SimpleLookup
     }
 
     /**
-     * @param $arrParamValue
-     * @param $arrOptions
+     * @param array $arrParamValue Param value which shall be filtered.
+     * @param array $arrOptions    Filter options.
+     * @param null  $emptyValue    Used when filter shall be empty.
      *
      * @return array
      */
-    private function filterParamValue($arrParamValue, $arrOptions)
+    private function filterParamValue($arrParamValue, $arrOptions, $emptyValue = null)
     {
         // Filter out the magic keyword for none selected.
         if ($arrParamValue && in_array('--none--', $arrParamValue)) {
-            $arrParamValue = array();
+            $arrParamValue = $emptyValue;
         }
 
         // Filter out the magic keyword for all selected.
