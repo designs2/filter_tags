@@ -118,6 +118,8 @@ class Tags extends SimpleLookup
 
     /**
      * {@inheritdoc}
+     *
+     * @SuppressWarnings(PHPMD.Superglobals)
      */
     public function getParameterFilterWidgets(
         $arrIds,
