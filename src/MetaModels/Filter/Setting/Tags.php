@@ -17,6 +17,7 @@
 
 namespace MetaModels\Filter\Setting;
 
+use MetaModels\Attribute\IAttribute;
 use MetaModels\Filter\Filter;
 use MetaModels\Filter\IFilter;
 use MetaModels\Filter\Rules\Condition\ConditionAnd;
@@ -132,6 +133,7 @@ class Tags extends SimpleLookup
         $arrCount   = array();
         $arrOptions = $this->getParameterFilterOptions($objAttribute, $arrIds, $arrCount);
 
+        $arrParamValue  = null;
         $strParamName   = $this->getParamName();
         $arrMyFilterUrl = $arrFilterUrl;
         // If we have a value, we have to explode it by comma to have a valid value which the active checks may cope
@@ -160,37 +162,15 @@ class Tags extends SimpleLookup
 
         $GLOBALS['MM_FILTER_PARAMS'][] = $strParamName;
 
-        return array(
-            $this->getParamName() => $this->prepareFrontendFilterWidget(
-                array(
-                    'label'     => array(
-                        ($this->get('label') ? $this->get('label') : $objAttribute->getName()),
-                        'GET: ' . $strParamName
-                    ),
-                    'inputType' => 'tags',
-                    'options'   => $arrOptions,
-                    'count'     => $arrCount,
-                    'showCount' => $objFrontendFilterOptions->isShowCountValues(),
-                    'eval'      => array(
-                        'includeBlankOption' => (
-                            $this->get('blankoption')
-                            && !$objFrontendFilterOptions->isHideClearFilter()
-                        ),
-                        'blankOptionLabel'   => &$GLOBALS['TL_LANG']['metamodels_frontendfilter']['do_not_filter'],
-                        'multiple'     => true,
-                        'colname'      => $objAttribute->getColname(),
-                        'urlparam'     => $strParamName,
-                        'onlyused'     => $this->get('onlyused'),
-                        'onlypossible' => $this->get('onlypossible'),
-                        'template'     => $this->get('template')
-                    ),
-                    // We need to implode again to have it transported correctly in the frontend filter.
-                    'urlvalue' => !empty($arrParamValue) ? implode(',', $arrParamValue) : ''
-                ),
-                $arrMyFilterUrl,
-                $arrJumpTo,
-                $objFrontendFilterOptions
-            )
+        return $this->buildParameterFilterWidgets(
+            $arrJumpTo,
+            $objFrontendFilterOptions,
+            $objAttribute,
+            $strParamName,
+            $arrOptions,
+            $arrCount,
+            $arrParamValue,
+            $arrMyFilterUrl
         );
     }
 
@@ -239,5 +219,65 @@ class Tags extends SimpleLookup
         }
 
         return $arrParamValue;
+    }
+
+    /**
+     * Build parameter filter widgets.
+     *
+     * @param array                 $arrJumpTo                The jumpTo page.
+     * @param FrontendFilterOptions $objFrontendFilterOptions Frontendfilter options.
+     * @param IAttribute            $objAttribute             MetaModel Attribute.
+     * @param string                $strParamName             Param name.
+     * @param array                 $arrOptions               Options.
+     * @param array                 $arrCount                 Count configuration.
+     * @param array|null            $arrParamValue            Parameter value.
+     * @param array                 $arrMyFilterUrl           Filter url of the current filter.
+     *
+     * @return array
+     *
+     * @SuppressWarnings(PHPMD.Superglobals)
+     */
+    private function buildParameterFilterWidgets(
+        $arrJumpTo,
+        FrontendFilterOptions $objFrontendFilterOptions,
+        $objAttribute,
+        $strParamName,
+        $arrOptions,
+        $arrCount,
+        $arrParamValue,
+        $arrMyFilterUrl
+    ) {
+        return  array(
+            $this->getParamName() => $this->prepareFrontendFilterWidget(
+                array(
+                    'label' => array(
+                        ($this->get('label') ? $this->get('label') : $objAttribute->getName()),
+                        'GET: ' . $strParamName
+                    ),
+                    'inputType' => 'tags',
+                    'options' => $arrOptions,
+                    'count' => $arrCount,
+                    'showCount' => $objFrontendFilterOptions->isShowCountValues(),
+                    'eval' => array(
+                        'includeBlankOption' => (
+                            $this->get('blankoption')
+                            && !$objFrontendFilterOptions->isHideClearFilter()
+                        ),
+                        'blankOptionLabel'   => &$GLOBALS['TL_LANG']['metamodels_frontendfilter']['do_not_filter'],
+                        'multiple'           => true,
+                        'colname'            => $objAttribute->getColname(),
+                        'urlparam'           => $strParamName,
+                        'onlyused'           => $this->get('onlyused'),
+                        'onlypossible'       => $this->get('onlypossible'),
+                        'template'           => $this->get('template')
+                    ),
+                    // We need to implode again to have it transported correctly in the frontend filter.
+                    'urlvalue' => !empty($arrParamValue) ? implode(',', $arrParamValue) : ''
+                ),
+                $arrMyFilterUrl,
+                $arrJumpTo,
+                $objFrontendFilterOptions
+            )
+        );
     }
 }
