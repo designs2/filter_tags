@@ -34,185 +34,185 @@ use MetaModels\FrontendIntegration\FrontendFilterOptions;
  */
 class Tags extends SimpleLookup
 {
-	/**
-	 * Overrides the parent implementation to always return true, as this setting is always available for FE filtering.
-	 *
-	 * @return bool true as this setting is always available.
-	 */
-	public function enableFEFilterWidget()
-	{
-		return true;
-	}
+    /**
+     * Overrides the parent implementation to always return true, as this setting is always available for FE filtering.
+     *
+     * @return bool true as this setting is always available.
+     */
+    public function enableFEFilterWidget()
+    {
+        return true;
+    }
 
-	/**
-	 * {@inheritdoc}
-	 */
-	protected function isActiveFrontendFilterValue($arrWidget, $arrFilterUrl, $strKeyOption)
-	{
-		return in_array($strKeyOption, (array)$arrWidget['value']) ? true : false;
-	}
+    /**
+     * {@inheritdoc}
+     */
+    protected function isActiveFrontendFilterValue($arrWidget, $arrFilterUrl, $strKeyOption)
+    {
+        return in_array($strKeyOption, (array)$arrWidget['value']) ? true : false;
+    }
 
-	/**
-	 * {@inheritdoc}
-	 */
-	protected function getFrontendFilterValue($arrWidget, $arrFilterUrl, $strKeyOption)
-	{
-		$arrCurrent = (array)$arrWidget['value'];
+    /**
+     * {@inheritdoc}
+     */
+    protected function getFrontendFilterValue($arrWidget, $arrFilterUrl, $strKeyOption)
+    {
+        $arrCurrent = (array)$arrWidget['value'];
 
-		if ($this->isActiveFrontendFilterValue($arrWidget, $arrFilterUrl, $strKeyOption))
-		{
-			$arrCurrent = array_diff($arrCurrent, array($strKeyOption));
-		} else {
-			$arrCurrent[] = $strKeyOption;
-		}
-		return implode(',', $arrCurrent);
-	}
+        if ($this->isActiveFrontendFilterValue($arrWidget, $arrFilterUrl, $strKeyOption))
+        {
+            $arrCurrent = array_diff($arrCurrent, array($strKeyOption));
+        } else {
+            $arrCurrent[] = $strKeyOption;
+        }
+        return implode(',', $arrCurrent);
+    }
 
-	/**
-	 * {@inheritdoc}
-	 */
-	public function prepareRules(IFilter $objFilter, $arrFilterUrl)
-	{
-		$objMetaModel = $this->getMetaModel();
-		$objAttribute = $objMetaModel->getAttributeById($this->get('attr_id'));
-		$strParamName = $this->getParamName();
+    /**
+     * {@inheritdoc}
+     */
+    public function prepareRules(IFilter $objFilter, $arrFilterUrl)
+    {
+        $objMetaModel = $this->getMetaModel();
+        $objAttribute = $objMetaModel->getAttributeById($this->get('attr_id'));
+        $strParamName = $this->getParamName();
 
-		$arrParamValue = null;
-		if (array_key_exists($strParamName, $arrFilterUrl) && !empty($arrFilterUrl[$strParamName]))
-		{
-			if (is_array($arrFilterUrl[$strParamName]))
-			{
-				$arrParamValue = $arrFilterUrl[$strParamName];
-			} else {
-				$arrParamValue = explode(',', $arrFilterUrl[$strParamName]);
-			}
-		}
+        $arrParamValue = null;
+        if (array_key_exists($strParamName, $arrFilterUrl) && !empty($arrFilterUrl[$strParamName]))
+        {
+            if (is_array($arrFilterUrl[$strParamName]))
+            {
+                $arrParamValue = $arrFilterUrl[$strParamName];
+            } else {
+                $arrParamValue = explode(',', $arrFilterUrl[$strParamName]);
+            }
+        }
 
-		$arrOptions = $this->getParameterFilterOptions($objAttribute, null);
+        $arrOptions = $this->getParameterFilterOptions($objAttribute, null);
 
-		// Filter out the magic keyword for none selected.
-		if ($arrParamValue && in_array('--none--', $arrParamValue))
-		{
-			$arrParamValue = array();
-		}
+        // Filter out the magic keyword for none selected.
+        if ($arrParamValue && in_array('--none--', $arrParamValue))
+        {
+            $arrParamValue = array();
+        }
 
-		// Filter out the magic keyword for all selected.
-		if ($arrParamValue && in_array('--all--', $arrParamValue))
-		{
-			$arrParamValue = array_keys($arrOptions);
-		}
+        // Filter out the magic keyword for all selected.
+        if ($arrParamValue && in_array('--all--', $arrParamValue))
+        {
+            $arrParamValue = array_keys($arrOptions);
+        }
 
-		if ($objAttribute && $strParamName && is_array($arrParamValue) && $arrOptions)
-		{
-			// Determine which parenting rule to use, AND or OR.
-			if ($this->get('useor'))
-			{
-				$objParentRule = new ConditionOr();
-			}
-			else
-			{
-				$objParentRule = new ConditionAnd();
-			}
+        if ($objAttribute && $strParamName && is_array($arrParamValue) && $arrOptions)
+        {
+            // Determine which parenting rule to use, AND or OR.
+            if ($this->get('useor'))
+            {
+                $objParentRule = new ConditionOr();
+            }
+            else
+            {
+                $objParentRule = new ConditionAnd();
+            }
 
-			// We allow the current and the fallback language to be searched by default.
-			$arrValidLanguages = array($this->getMetaModel()->getActiveLanguage(), $this->getMetaModel()->getFallbackLanguage());
+            // We allow the current and the fallback language to be searched by default.
+            $arrValidLanguages = array($this->getMetaModel()->getActiveLanguage(), $this->getMetaModel()->getFallbackLanguage());
 
-			foreach ($arrParamValue as $strParamValue)
-			{
-				// Restrict to valid options for obvious reasons.
-				if (array_key_exists($strParamValue, $arrOptions))
-				{
-					$objSubFilter = new Filter($objMetaModel);
-					$objSubFilter->addFilterRule(new SearchAttribute($objAttribute, $strParamValue, $arrValidLanguages));
-					$objParentRule->addChild($objSubFilter);
-				}
-			}
+            foreach ($arrParamValue as $strParamValue)
+            {
+                // Restrict to valid options for obvious reasons.
+                if (array_key_exists($strParamValue, $arrOptions))
+                {
+                    $objSubFilter = new Filter($objMetaModel);
+                    $objSubFilter->addFilterRule(new SearchAttribute($objAttribute, $strParamValue, $arrValidLanguages));
+                    $objParentRule->addChild($objSubFilter);
+                }
+            }
 
-			$objFilter->addFilterRule($objParentRule);
-			return;
-		}
+            $objFilter->addFilterRule($objParentRule);
+            return;
+        }
 
-		// If no setting has been defined, we appear transparently as "not defined" and return all items.
-		$objFilter->addFilterRule(new StaticIdList(null));
-	}
+        // If no setting has been defined, we appear transparently as "not defined" and return all items.
+        $objFilter->addFilterRule(new StaticIdList(null));
+    }
 
-	/**
-	 * {@inheritdoc}
-	 */
-	public function getParameterFilterWidgets(
-		$arrIds,
-		$arrFilterUrl,
-		$arrJumpTo,
-		FrontendFilterOptions $objFrontendFilterOptions
-	)
-	{
-		$objAttribute = $this->getMetaModel()->getAttributeById($this->get('attr_id'));
+    /**
+     * {@inheritdoc}
+     */
+    public function getParameterFilterWidgets(
+        $arrIds,
+        $arrFilterUrl,
+        $arrJumpTo,
+        FrontendFilterOptions $objFrontendFilterOptions
+    )
+    {
+        $objAttribute = $this->getMetaModel()->getAttributeById($this->get('attr_id'));
 
-		$arrCount   = array();
-		$arrOptions = $this->getParameterFilterOptions($objAttribute, $arrIds, $arrCount);
+        $arrCount   = array();
+        $arrOptions = $this->getParameterFilterOptions($objAttribute, $arrIds, $arrCount);
 
-		$strParamName   = $this->getParamName();
-		$arrMyFilterUrl = $arrFilterUrl;
-		// If we have a value, we have to explode it by comma to have a valid value which the active checks may cope with.
-		if (array_key_exists($strParamName, $arrFilterUrl) && !empty($arrFilterUrl[$strParamName]))
-		{
-			if (is_array($arrFilterUrl[$strParamName]))
-			{
-				$arrParamValue = $arrFilterUrl[$strParamName];
-			} else {
-				$arrParamValue = explode(',', $arrFilterUrl[$strParamName]);
-			}
+        $strParamName   = $this->getParamName();
+        $arrMyFilterUrl = $arrFilterUrl;
+        // If we have a value, we have to explode it by comma to have a valid value which the active checks may cope with.
+        if (array_key_exists($strParamName, $arrFilterUrl) && !empty($arrFilterUrl[$strParamName]))
+        {
+            if (is_array($arrFilterUrl[$strParamName]))
+            {
+                $arrParamValue = $arrFilterUrl[$strParamName];
+            } else {
+                $arrParamValue = explode(',', $arrFilterUrl[$strParamName]);
+            }
 
-			// Ok, this is rather hacky here. The magic value of '--none--' means clear in the widget.
-			if (in_array('--none--', $arrParamValue))
-			{
-				$arrParamValue = null;
-			}
+            // Ok, this is rather hacky here. The magic value of '--none--' means clear in the widget.
+            if (in_array('--none--', $arrParamValue))
+            {
+                $arrParamValue = null;
+            }
 
-			// Also hacky, the magic value of '--all--' means check all items in the widget.
-			if (is_array($arrParamValue) && in_array('--all--', $arrParamValue))
-			{
-				$arrParamValue = array_keys($arrOptions);
-			}
+            // Also hacky, the magic value of '--all--' means check all items in the widget.
+            if (is_array($arrParamValue) && in_array('--all--', $arrParamValue))
+            {
+                $arrParamValue = array_keys($arrOptions);
+            }
 
-			if ($arrParamValue)
-			{
-				$arrMyFilterUrl[$strParamName] = $arrParamValue;
-			}
-		}
+            if ($arrParamValue)
+            {
+                $arrMyFilterUrl[$strParamName] = $arrParamValue;
+            }
+        }
 
-		$GLOBALS['MM_FILTER_PARAMS'][] = $strParamName;
+        $GLOBALS['MM_FILTER_PARAMS'][] = $strParamName;
 
-		return array(
-			$this->getParamName() => $this->prepareFrontendFilterWidget(array
-				(
-					'label'     => array(
-						($this->get('label') ? $this->get('label') : $objAttribute->getName()),
-						'GET: ' . $strParamName
-					),
-					'inputType' => 'tags',
-					'options'   => $arrOptions,
-					'count'     => $arrCount,
-					'showCount' => $objFrontendFilterOptions->isShowCountValues(),
-					'eval'      => array(
-						'includeBlankOption' => (
-							$this->get('blankoption')
-							&& !$objFrontendFilterOptions->isHideClearFilter()
-						),
-						'blankOptionLabel'   => &$GLOBALS['TL_LANG']['metamodels_frontendfilter']['do_not_filter'],
-						'multiple'     => true,
-						'colname'      => $objAttribute->getColname(),
-						'urlparam'     => $strParamName,
-						'onlyused'     => $this->get('onlyused'),
-						'onlypossible' => $this->get('onlypossible'),
-						'template'     => $this->get('template')
-					),
-					// We need to implode again to have it transported correctly in the frontend filter.
-					'urlvalue' => !empty($arrParamValue) ? implode(',', $arrParamValue) : ''
-				),
-				$arrMyFilterUrl,
-				$arrJumpTo,
-				$objFrontendFilterOptions)
-		);
-	}
+        return array(
+            $this->getParamName() => $this->prepareFrontendFilterWidget(array
+                (
+                    'label'     => array(
+                        ($this->get('label') ? $this->get('label') : $objAttribute->getName()),
+                        'GET: ' . $strParamName
+                    ),
+                    'inputType' => 'tags',
+                    'options'   => $arrOptions,
+                    'count'     => $arrCount,
+                    'showCount' => $objFrontendFilterOptions->isShowCountValues(),
+                    'eval'      => array(
+                        'includeBlankOption' => (
+                            $this->get('blankoption')
+                            && !$objFrontendFilterOptions->isHideClearFilter()
+                        ),
+                        'blankOptionLabel'   => &$GLOBALS['TL_LANG']['metamodels_frontendfilter']['do_not_filter'],
+                        'multiple'     => true,
+                        'colname'      => $objAttribute->getColname(),
+                        'urlparam'     => $strParamName,
+                        'onlyused'     => $this->get('onlyused'),
+                        'onlypossible' => $this->get('onlypossible'),
+                        'template'     => $this->get('template')
+                    ),
+                    // We need to implode again to have it transported correctly in the frontend filter.
+                    'urlvalue' => !empty($arrParamValue) ? implode(',', $arrParamValue) : ''
+                ),
+                $arrMyFilterUrl,
+                $arrJumpTo,
+                $objFrontendFilterOptions)
+        );
+    }
 }
