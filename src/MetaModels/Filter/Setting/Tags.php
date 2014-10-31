@@ -187,8 +187,10 @@ class Tags extends SimpleLookup
     }
 
     /**
-     * @param $arrFilterUrl
-     * @param $strParamName
+     * Build filter param values.
+     *
+     * @param array  $arrFilterUrl Given filter url.
+     * @param string $strParamName Name of filter param.
      *
      * @return array|null
      */
@@ -207,6 +209,8 @@ class Tags extends SimpleLookup
     }
 
     /**
+     * Filter --all-- and --none values.
+     *
      * @param array $arrParamValue Param value which shall be filtered.
      * @param array $arrOptions    Filter options.
      * @param null  $emptyValue    Used when filter shall be empty.
