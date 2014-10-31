@@ -49,7 +49,7 @@ class Tags extends SimpleLookup
      */
     protected function isActiveFrontendFilterValue($arrWidget, $arrFilterUrl, $strKeyOption)
     {
-        return in_array($strKeyOption, (array)$arrWidget['value']) ? true : false;
+        return in_array($strKeyOption, (array) $arrWidget['value']) ? true : false;
     }
 
     /**
@@ -57,14 +57,14 @@ class Tags extends SimpleLookup
      */
     protected function getFrontendFilterValue($arrWidget, $arrFilterUrl, $strKeyOption)
     {
-        $arrCurrent = (array)$arrWidget['value'];
+        $arrCurrent = (array) $arrWidget['value'];
 
-        if ($this->isActiveFrontendFilterValue($arrWidget, $arrFilterUrl, $strKeyOption))
-        {
+        if ($this->isActiveFrontendFilterValue($arrWidget, $arrFilterUrl, $strKeyOption)) {
             $arrCurrent = array_diff($arrCurrent, array($strKeyOption));
         } else {
             $arrCurrent[] = $strKeyOption;
         }
+
         return implode(',', $arrCurrent);
     }
 
@@ -78,10 +78,8 @@ class Tags extends SimpleLookup
         $strParamName = $this->getParamName();
 
         $arrParamValue = null;
-        if (array_key_exists($strParamName, $arrFilterUrl) && !empty($arrFilterUrl[$strParamName]))
-        {
-            if (is_array($arrFilterUrl[$strParamName]))
-            {
+        if (array_key_exists($strParamName, $arrFilterUrl) && !empty($arrFilterUrl[$strParamName])) {
+            if (is_array($arrFilterUrl[$strParamName])) {
                 $arrParamValue = $arrFilterUrl[$strParamName];
             } else {
                 $arrParamValue = explode(',', $arrFilterUrl[$strParamName]);
@@ -91,44 +89,43 @@ class Tags extends SimpleLookup
         $arrOptions = $this->getParameterFilterOptions($objAttribute, null);
 
         // Filter out the magic keyword for none selected.
-        if ($arrParamValue && in_array('--none--', $arrParamValue))
-        {
+        if ($arrParamValue && in_array('--none--', $arrParamValue)) {
             $arrParamValue = array();
         }
 
         // Filter out the magic keyword for all selected.
-        if ($arrParamValue && in_array('--all--', $arrParamValue))
-        {
+        if ($arrParamValue && in_array('--all--', $arrParamValue)) {
             $arrParamValue = array_keys($arrOptions);
         }
 
-        if ($objAttribute && $strParamName && is_array($arrParamValue) && $arrOptions)
-        {
+        if ($objAttribute && $strParamName && is_array($arrParamValue) && $arrOptions) {
             // Determine which parenting rule to use, AND or OR.
-            if ($this->get('useor'))
-            {
+            if ($this->get('useor')) {
                 $objParentRule = new ConditionOr();
-            }
-            else
-            {
+            } else {
                 $objParentRule = new ConditionAnd();
             }
 
             // We allow the current and the fallback language to be searched by default.
-            $arrValidLanguages = array($this->getMetaModel()->getActiveLanguage(), $this->getMetaModel()->getFallbackLanguage());
+            $arrValidLanguages = array(
+                $this->getMetaModel()->getActiveLanguage(),
+                $this->getMetaModel()->getFallbackLanguage()
+            );
 
-            foreach ($arrParamValue as $strParamValue)
-            {
+            foreach ($arrParamValue as $strParamValue) {
                 // Restrict to valid options for obvious reasons.
-                if (array_key_exists($strParamValue, $arrOptions))
-                {
+                if (array_key_exists($strParamValue, $arrOptions)) {
                     $objSubFilter = new Filter($objMetaModel);
-                    $objSubFilter->addFilterRule(new SearchAttribute($objAttribute, $strParamValue, $arrValidLanguages));
+                    $objSubFilter->addFilterRule(
+                        new SearchAttribute($objAttribute, $strParamValue, $arrValidLanguages)
+                    );
+
                     $objParentRule->addChild($objSubFilter);
                 }
             }
 
             $objFilter->addFilterRule($objParentRule);
+
             return;
         }
 
@@ -144,8 +141,7 @@ class Tags extends SimpleLookup
         $arrFilterUrl,
         $arrJumpTo,
         FrontendFilterOptions $objFrontendFilterOptions
-    )
-    {
+    ) {
         $objAttribute = $this->getMetaModel()->getAttributeById($this->get('attr_id'));
 
         $arrCount   = array();
@@ -153,30 +149,26 @@ class Tags extends SimpleLookup
 
         $strParamName   = $this->getParamName();
         $arrMyFilterUrl = $arrFilterUrl;
-        // If we have a value, we have to explode it by comma to have a valid value which the active checks may cope with.
-        if (array_key_exists($strParamName, $arrFilterUrl) && !empty($arrFilterUrl[$strParamName]))
-        {
-            if (is_array($arrFilterUrl[$strParamName]))
-            {
+        // If we have a value, we have to explode it by comma to have a valid value which the active checks may cope
+        // with.
+        if (array_key_exists($strParamName, $arrFilterUrl) && !empty($arrFilterUrl[$strParamName])) {
+            if (is_array($arrFilterUrl[$strParamName])) {
                 $arrParamValue = $arrFilterUrl[$strParamName];
             } else {
                 $arrParamValue = explode(',', $arrFilterUrl[$strParamName]);
             }
 
             // Ok, this is rather hacky here. The magic value of '--none--' means clear in the widget.
-            if (in_array('--none--', $arrParamValue))
-            {
+            if (in_array('--none--', $arrParamValue)) {
                 $arrParamValue = null;
             }
 
             // Also hacky, the magic value of '--all--' means check all items in the widget.
-            if (is_array($arrParamValue) && in_array('--all--', $arrParamValue))
-            {
+            if (is_array($arrParamValue) && in_array('--all--', $arrParamValue)) {
                 $arrParamValue = array_keys($arrOptions);
             }
 
-            if ($arrParamValue)
-            {
+            if ($arrParamValue) {
                 $arrMyFilterUrl[$strParamName] = $arrParamValue;
             }
         }
@@ -184,8 +176,8 @@ class Tags extends SimpleLookup
         $GLOBALS['MM_FILTER_PARAMS'][] = $strParamName;
 
         return array(
-            $this->getParamName() => $this->prepareFrontendFilterWidget(array
-                (
+            $this->getParamName() => $this->prepareFrontendFilterWidget(
+                array(
                     'label'     => array(
                         ($this->get('label') ? $this->get('label') : $objAttribute->getName()),
                         'GET: ' . $strParamName
@@ -212,7 +204,8 @@ class Tags extends SimpleLookup
                 ),
                 $arrMyFilterUrl,
                 $arrJumpTo,
-                $objFrontendFilterOptions)
+                $objFrontendFilterOptions
+            )
         );
     }
 }
