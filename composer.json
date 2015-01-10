@@ -53,7 +53,7 @@
             "transifex": {
                 "project": "metamodels",
                 "prefix": "filter_tags-",
-                "languages_cto": "src/system/modules/metamodelsfilter_tags/languages",
+                "languages_cto": "contao/languages",
                 "languages_tx": ".tx"
             }
         },
