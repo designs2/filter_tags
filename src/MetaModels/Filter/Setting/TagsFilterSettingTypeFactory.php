@@ -32,7 +32,8 @@ class TagsFilterSettingTypeFactory extends AbstractFilterSettingTypeFactory
         $this
             ->setTypeName('tags')
             ->setTypeIcon('system/modules/metamodelsfilter_tags/html/filter_tags.png')
-            ->setTypeClass('MetaModels\Filter\Setting\Tags');
+            ->setTypeClass('MetaModels\Filter\Setting\Tags')
+            ->allowAttributeTypes();
 
         foreach (array(
             'select',
