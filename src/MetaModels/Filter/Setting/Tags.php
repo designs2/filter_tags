@@ -127,6 +127,7 @@ class Tags extends SimpleLookup
      * {@inheritdoc}
      *
      * @SuppressWarnings(PHPMD.Superglobals)
+     * @SuppressWarnings(PHPMD.CamelCaseVariableName)
      */
     public function getParameterFilterWidgets(
         $arrIds,
@@ -242,6 +243,7 @@ class Tags extends SimpleLookup
      * @return array
      *
      * @SuppressWarnings(PHPMD.Superglobals)
+     * @SuppressWarnings(PHPMD.CamelCaseVariableName)
      */
     private function buildParameterFilterWidgets(
         $arrJumpTo,
