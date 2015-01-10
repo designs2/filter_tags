@@ -7,9 +7,15 @@
  * data in each collection.
  *
  * PHP version 5
+ *
  * @package    MetaModels
  * @subpackage FilterTags
+ * @author     Christian Schiffler <c.schiffler@cyberspectrum.de>
  * @author     Christian de la Haye <service@delahaye.de>
+ * @author     Andreas Isaak <info@andreas-isaak.de>
+ * @author     Christopher Bölter <c.boelter@cogizz.de>
+ * @author     David Maack <david.maack@arcor.de>
+ * @author     David Molineus <mail@netzmacht.de>
  * @copyright  The MetaModels team.
  * @license    LGPL.
  * @filesource
