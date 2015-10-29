@@ -32,8 +32,8 @@
         "metamodels/core":"*"
     },
     "require-dev": {
-      "cyberspectrum/contao-toolbox": "~0.6",
-      "phpcq/all-tasks": "~1.0"
+      "cyberspectrum/contao-toolbox": "*",
+      "phpcq/all-tasks": "*"
     },
     "conflict": {
         "contao/core": "3.4.0"
