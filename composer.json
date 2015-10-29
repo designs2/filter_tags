@@ -1,5 +1,5 @@
 {
-    "name":"metamodels/filter_tags",
+    "name":"designs2/filter_tags",
     "description":"MetaModels tags filter",
     "keywords":["contao", "metamodels", "filter", "tags"],
     "type":"contao-module",
@@ -28,8 +28,8 @@
     "require":{
         "php":">=5.3",
         "contao/core": ">=3.2,<3.6",
-        "contao-community-alliance/composer-plugin": "~2.0",
-        "metamodels/core":"~2.0"
+        "contao-community-alliance/composer-plugin": "*",
+        "metamodels/core":"*"
     },
     "require-dev": {
       "cyberspectrum/contao-toolbox": "~0.6",
